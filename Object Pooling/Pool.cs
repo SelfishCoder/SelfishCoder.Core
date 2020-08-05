@@ -5,7 +5,10 @@ using System.Collections.Generic;
 
 namespace SelfishCoder.Core
 {
-    [Serializable]
+    /// <summary>
+    /// 
+    /// </summary>
+    [Serializable, DisallowMultipleComponent]
     public class Pool : MonoBehaviour
     {
         #region Fields
@@ -15,7 +18,7 @@ namespace SelfishCoder.Core
         [SerializeField] private int currentSize = 0;
         [SerializeField] private int maxSize = 0;
         [SerializeField] private bool isExtendable = false;
-        private List<PoolObject> objects = new List<PoolObject>();
+        [SerializeField] private List<PoolObject> objects = new List<PoolObject>();
 
         #endregion
 
@@ -60,26 +63,8 @@ namespace SelfishCoder.Core
         #endregion
         
         #region Constructor
-        
-        public Pool(GameObject prefab)
-        {
-            this.Prefab = prefab;
-        }
-        
-        public Pool(GameObject prefab, int initialSize)
-        {
-            this.Prefab = prefab;
-            this.InitialSize = initialSize;
-        }
-        
-        public Pool(GameObject prefab, int initialSize, int maxSize)
-        {
-            this.Prefab = prefab;
-            this.InitialSize = initialSize;
-            this.MaxSize = maxSize;
-        }
 
-        public Pool(GameObject prefab, int initialSize, int maxSize, bool isExtendable)
+        public Pool(GameObject prefab, int initialSize = 10, int maxSize = 10, bool isExtendable = false)
         {
             this.Prefab = prefab;
             this.InitialSize = initialSize;
@@ -91,12 +76,9 @@ namespace SelfishCoder.Core
         
         #region Events
 
-        [Space(10f),Header("Events"), SerializeField] private UnityEvent onPoolObjectConsumed;
-        [SerializeField] private UnityEvent onPoolObjectRecycled;
-        [SerializeField] private UnityEvent onPoolObjectSpawned;
+        [Space(10f),Header("Events")]
         [SerializeField] private UnityEvent onPoolCreated;
-        [SerializeField] private UnityEvent onPoolExtended;
-        [SerializeField] private UnityEvent onPoolShrinked;
+        [SerializeField] private UnityEvent onPoolSizeChanged;
         [SerializeField] private UnityEvent onPoolInitialized;
 
         #endregion
@@ -120,6 +102,10 @@ namespace SelfishCoder.Core
         #endregion
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     [Serializable]
     public class Pool<T> : MonoBehaviour where T : class
     {

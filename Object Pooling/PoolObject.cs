@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace SelfishCoder.Core
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class PoolObject
     {
@@ -29,6 +32,10 @@ namespace SelfishCoder.Core
         }
     }
     
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     [Serializable]
     public class PoolObject<T> where T: class
     {

@@ -1,5 +1,4 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
 namespace SelfishCoder.Core
@@ -9,24 +8,48 @@ namespace SelfishCoder.Core
     /// </summary>
     public class PoolManager : Singleton<PoolManager>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private Dictionary<GameObject,Pool> pools = new Dictionary<GameObject, Pool>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Dictionary<GameObject, Pool> Pools => pools;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pool"></param>
+        public void AddPool(Pool pool)
+        {
+            pools.Add(pool.Prefab,pool);    
+        }
         
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        [MenuItem("SelfishCoder/Core/Create Pool",false,1)]
-        public static Pool CreatePool()
+        public Pool CreatePool()
         {
             GameObject poolObject = new GameObject("New Pool");
-            poolObject.transform.parent = GameObject.FindObjectOfType<PoolManager>().transform;
+            PoolManager poolManager = GameObject.FindObjectOfType<PoolManager>();
+            poolObject.transform.parent = poolManager.transform;
             
             Pool newPool = poolObject.AddComponent<Pool>();
-            
             //Instance.pools.Add(basePrefab,newPool);
             return newPool;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="basePrefab"></param>
+        /// <param name="initialSize"></param>
+        /// <param name="maxSize"></param>
+        /// <param name="isExtendable"></param>
+        /// <returns></returns>
         public Pool CreatePool(GameObject basePrefab, int initialSize, int maxSize, bool isExtendable)
         {
             GameObject poolObject = new GameObject($"{basePrefab.name} Pool");
