@@ -11,6 +11,13 @@ namespace SelfishCoder.Core
     /// </summary>
     public static class SceneManager
     {
+        #region Events
+
+        public static event Action<Scene> SceneLoaded;
+        public static event Action<Scene> SceneUnloaded;
+
+        #endregion
+        
         #region Loading Scene
 
         /// <summary>
@@ -253,6 +260,28 @@ namespace SelfishCoder.Core
             return sceneIndex >= 0 && EditorBuildSettings.scenes.Length >= sceneIndex;
         }
         
+        #endregion
+
+        #region Event Methods
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="scene"></param>
+        private static void OnSceneLoaded(Scene scene)
+        {
+            SceneLoaded?.Invoke(scene);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="scene"></param>
+        private static void OnSceneUnloaded(Scene scene)
+        {
+            SceneUnloaded?.Invoke(scene);
+        }
+
         #endregion
     }
 }
