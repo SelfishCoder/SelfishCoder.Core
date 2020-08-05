@@ -51,6 +51,7 @@ namespace SelfishCoder.Core
         public virtual void Awake()
         {
             Instance = this as T;
+            DontDestroyOnLoad(this);
         }
     }
 }
