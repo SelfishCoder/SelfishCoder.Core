@@ -13,47 +13,88 @@ namespace SelfishCoder.Core
     {
         #region Fields
 
+        /// <summary>
+        /// 
+        /// </summary>
         [SerializeField] private GameObject prefab = null;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         [SerializeField] private int initialSize = 0;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         [SerializeField] private int currentSize = 0;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         [SerializeField] private int maxSize = 0;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         [SerializeField] private bool isExtendable = false;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         [SerializeField] private List<PoolObject> objects = new List<PoolObject>();
 
         #endregion
 
         #region Properties
 
+        /// <summary>
+        /// 
+        /// </summary>
         public GameObject Prefab
         {
             get => prefab;
             private set => prefab = value;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int InitialSize
         {
             get => initialSize;
             private set => initialSize = value;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int CurrentSize
         {
             get => currentSize;
             private set => currentSize = value;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int MaxSize
         {
             get => maxSize;
             private set => maxSize = value;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsExtendable
         {
             get => isExtendable;
             private set => isExtendable = value;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public List<PoolObject> Objects
         {
             get => objects;
@@ -64,6 +105,13 @@ namespace SelfishCoder.Core
         
         #region Constructor
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="prefab"></param>
+        /// <param name="initialSize"></param>
+        /// <param name="maxSize"></param>
+        /// <param name="isExtendable"></param>
         public Pool(GameObject prefab, int initialSize = 10, int maxSize = 10, bool isExtendable = false)
         {
             this.Prefab = prefab;
@@ -76,15 +124,30 @@ namespace SelfishCoder.Core
         
         #region Events
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Space(10f),Header("Events")]
         [SerializeField] private UnityEvent onPoolCreated;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         [SerializeField] private UnityEvent onPoolSizeChanged;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         [SerializeField] private UnityEvent onPoolInitialized;
 
         #endregion
 
-        #region Methods
+        #region Public Methods
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public PoolObject GetObject()
         {
             foreach (PoolObject poolObject in this.Objects)
