@@ -8,7 +8,7 @@ namespace SelfishCoder.Core
     /// <summary>
     /// 
     /// </summary>
-    public static class DataManager
+    public static class PersistentDataManager
     {
         /// <summary>
         /// 
