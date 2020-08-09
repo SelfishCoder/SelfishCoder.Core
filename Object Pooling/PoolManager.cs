@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 
 namespace SelfishCoder.Core
@@ -33,13 +33,11 @@ namespace SelfishCoder.Core
         /// <returns></returns>
         public Pool CreatePool()
         {
-            GameObject poolObject = new GameObject("New Pool");
-            PoolManager poolManager = GameObject.FindObjectOfType<PoolManager>();
-            poolObject.transform.parent = poolManager.transform;
-            
-            Pool newPool = poolObject.AddComponent<Pool>();
-            //Instance.pools.Add(basePrefab,newPool);
-            return newPool;
+            Pool pool =  new GameObject("New Pool").AddComponent<Pool>();
+            GameObject parent = GameObject.Find("Pools");
+            Transform parentTransform = parent ? parent.transform : new GameObject("Pools").transform;
+            pool.transform.parent = parentTransform.transform;
+            return pool;
         }
         
         /// <summary>
