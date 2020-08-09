@@ -262,7 +262,7 @@ namespace SelfishCoder.Core
         
         #endregion
 
-        #region Event Methods
+        #region Event Raising Methods
 
         /// <summary>
         /// 
