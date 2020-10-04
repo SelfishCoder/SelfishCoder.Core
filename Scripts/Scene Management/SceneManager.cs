@@ -2,19 +2,41 @@
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
-namespace SelfishCoder.Core
+namespace SelfishCoder.Core.SceneManagement
 {
     /// <summary>
     /// 
     /// </summary>
     public static class SceneManager
     {
+        #region Fields
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static Dictionary<AsyncOperation,Scene> asyncOperations = new Dictionary<AsyncOperation, Scene>();
+
+        #endregion
+        
         #region Events
 
+        /// <summary>
+        /// 
+        /// </summary>
         public static event Action<Scene> SceneLoaded;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public static event Action<Scene> SceneUnloaded;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public static event Action<Scene> SceneReloaded;
 
         #endregion
         
@@ -24,25 +46,9 @@ namespace SelfishCoder.Core
         /// 
         /// </summary>
         /// <param name="sceneName"></param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static void LoadScene(string sceneName)
-        {
-            if (!IsSceneExist(sceneName))
-            {
-                throw new ArgumentOutOfRangeException(nameof(sceneName),
-                    $"Scene Name: '{sceneName}' is not valid in the current context.");
-            }
-
-            UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sceneName"></param>
         /// <param name="sceneMode"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static void LoadScene(string sceneName, LoadSceneMode sceneMode)
+        public static void LoadScene(string sceneName, LoadSceneMode sceneMode = default)
         {
             if (!IsSceneExist(sceneName))
             {
@@ -57,25 +63,9 @@ namespace SelfishCoder.Core
         /// 
         /// </summary>
         /// <param name="sceneIndex"></param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static void LoadScene(int sceneIndex)
-        {
-            if (!IsSceneExist(sceneIndex))
-            {
-                throw new ArgumentOutOfRangeException(nameof(sceneIndex),
-                    $"Scene Index: '{sceneIndex}' is not valid in the current context.");
-            }
-
-            UnityEngine.SceneManagement.SceneManager.LoadScene(sceneIndex);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sceneIndex"></param>
         /// <param name="sceneMode"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static void LoadScene(int sceneIndex, LoadSceneMode sceneMode)
+        public static void LoadScene(int sceneIndex, LoadSceneMode sceneMode = default)
         {
             if (!IsSceneExist(sceneIndex))
             {
@@ -90,7 +80,8 @@ namespace SelfishCoder.Core
         /// 
         /// </summary>
         /// <param name="sceneName"></param>
-        public static void LoadSceneAsync(string sceneName)
+        /// <param name="sceneMode"></param>
+        public static void LoadSceneAsync(string sceneName, LoadSceneMode sceneMode = default)
         {
             if (!IsSceneExist(sceneName))
             {
@@ -98,39 +89,8 @@ namespace SelfishCoder.Core
                     $"Scene Name: '{sceneName}' is not valid in the current context.");
             }
 
-            AsyncOperation asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sceneName"></param>
-        /// <param name="sceneMode"></param>
-        public static void LoadSceneAsync(string sceneName, LoadSceneMode sceneMode)
-        {
-            if (!IsSceneExist(sceneName))
-            {
-                throw new ArgumentOutOfRangeException(nameof(sceneName),
-                    $"Scene Name: '{sceneName}' is not valid in the current context.");
-            }
-
-            AsyncOperation asyncOperation =
-                UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, sceneMode);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sceneIndex"></param>
-        public static void LoadSceneAsync(int sceneIndex)
-        {
-            if (!IsSceneExist(sceneIndex))
-            {
-                throw new ArgumentOutOfRangeException(nameof(sceneIndex),
-                    $"Scene Index: '{sceneIndex}' is not valid in the current context.");
-            }
-
-            AsyncOperation asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneIndex);
+            AsyncOperation loadOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, sceneMode);
+            loadOperation.completed += OnSceneLoadedAsync;
         }
 
         /// <summary>
@@ -138,7 +98,7 @@ namespace SelfishCoder.Core
         /// </summary>
         /// <param name="sceneIndex"></param>
         /// <param name="sceneMode"></param>
-        public static void LoadSceneAsync(int sceneIndex, LoadSceneMode sceneMode)
+        public static void LoadSceneAsync(int sceneIndex, LoadSceneMode sceneMode = default)
         {
             if (!IsSceneExist(sceneIndex))
             {
@@ -146,8 +106,8 @@ namespace SelfishCoder.Core
                     $"Scene Index: '{sceneIndex}' is not valid in the current context.");
             }
 
-            AsyncOperation asyncOperation =
-                UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneIndex, sceneMode);
+            AsyncOperation loadOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneIndex, sceneMode);
+            loadOperation.completed += OnSceneLoadedAsync;
         }
 
         #endregion
@@ -158,7 +118,8 @@ namespace SelfishCoder.Core
         /// 
         /// </summary>
         /// <param name="sceneName"></param>
-        public static void UnloadSceneAsync(string sceneName)
+        /// <param name="unloadOptions"></param>
+        public static void UnloadSceneAsync(string sceneName, UnloadSceneOptions unloadOptions = default)
         {
             if (!IsSceneExist(sceneName))
             {
@@ -166,38 +127,8 @@ namespace SelfishCoder.Core
                     $"Scene Name: '{sceneName}' is not valid in the current context.");
             }
 
-            UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(sceneName);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sceneName"></param>
-        /// <param name="unloadOptions"></param>
-        public static void UnloadSceneAsync(string sceneName, UnloadSceneOptions unloadOptions)
-        {
-            if (!IsSceneExist(sceneName))
-            {
-                throw new ArgumentOutOfRangeException(nameof(sceneName),
-                    $"Scene Name: '{sceneName}' is not valid in the current context.");
-            }
-
-            UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(sceneName, unloadOptions);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sceneIndex"></param>
-        public static void UnloadSceneAsync(int sceneIndex)
-        {
-            if (!IsSceneExist(sceneIndex))
-            {
-                throw new ArgumentOutOfRangeException(nameof(sceneIndex),
-                    $"Scene Index: '{sceneIndex}' is not valid in the current context.");
-            }
-
-            UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(sceneIndex);
+            AsyncOperation unloadOperation = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(sceneName, unloadOptions);
+            unloadOperation.completed += OnSceneUnloadedAsync;
         }
 
         /// <summary>
@@ -205,7 +136,7 @@ namespace SelfishCoder.Core
         /// </summary>
         /// <param name="sceneIndex"></param>
         /// <param name="unloadOptions"></param>
-        public static void UnloadSceneAsync(int sceneIndex, UnloadSceneOptions unloadOptions)
+        public static void UnloadSceneAsync(int sceneIndex, UnloadSceneOptions unloadOptions = default)
         {
             if (!IsSceneExist(sceneIndex))
             {
@@ -213,7 +144,8 @@ namespace SelfishCoder.Core
                     $"Scene Index: '{sceneIndex}' is not valid in the current context.");
             }
 
-            UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(sceneIndex, unloadOptions);
+            AsyncOperation unloadOperation = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(sceneIndex, unloadOptions);
+            unloadOperation.completed += OnSceneUnloadedAsync;
         }
 
         #endregion
@@ -282,6 +214,34 @@ namespace SelfishCoder.Core
             SceneUnloaded?.Invoke(scene);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="unloadOperation"></param>
+        private static void OnSceneLoadedAsync(AsyncOperation unloadOperation)
+        {
+            if (!asyncOperations.ContainsKey(unloadOperation)) return;
+            OnSceneLoaded(asyncOperations[unloadOperation]);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="unloadOperation"></param>
+        private static void OnSceneUnloadedAsync(AsyncOperation unloadOperation)
+        {
+            if (!asyncOperations.ContainsKey(unloadOperation)) return;
+            OnSceneUnloaded(asyncOperations[unloadOperation]);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="scene"></param>
+        private static void OnSceneReloaded(Scene scene)
+        {
+            SceneReloaded?.Invoke(scene);
+        }
         #endregion
     }
 }
