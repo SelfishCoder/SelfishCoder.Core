@@ -152,9 +152,9 @@ namespace SelfishCoder.Core
         {
             foreach (PoolObject poolObject in this.Objects)
             {
-                if (!poolObject.InUse && !poolObject.GameObject.activeInHierarchy)
+                if (!poolObject.Used && !poolObject.GameObject.activeInHierarchy)
                 {
-                    poolObject.InUse = true;
+                    poolObject.Used = true;
                     poolObject.GameObject.SetActive(true);
                     return poolObject;
                 }

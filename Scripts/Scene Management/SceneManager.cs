@@ -242,6 +242,7 @@ namespace SelfishCoder.Core.SceneManagement
         {
             SceneReloaded?.Invoke(scene);
         }
+        
         #endregion
     }
 }

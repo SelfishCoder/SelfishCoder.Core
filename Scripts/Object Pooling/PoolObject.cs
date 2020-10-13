@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace SelfishCoder.Core
 {
@@ -15,12 +16,12 @@ namespace SelfishCoder.Core
         /// 
         /// </summary>
         [SerializeField] private GameObject gameObject;
-        
+
         /// <summary>
         /// 
         /// </summary>
-        [SerializeField] private bool inUse;
-        
+        [SerializeField] private bool used;
+
         /// <summary>
         /// 
         /// </summary>
@@ -51,21 +52,21 @@ namespace SelfishCoder.Core
         /// <summary>
         /// 
         /// </summary>
-        public bool InUse
+        public bool Used
         {
-            get => inUse;
-            set => inUse = value;
+            get => used;
+            set => used = value;
         }
 
         #endregion
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [Serializable]
-    public class PoolObject<T> where T: class
+    public class PoolObject<T> where T : class
     {
         #region Fields
 
@@ -73,12 +74,12 @@ namespace SelfishCoder.Core
         /// 
         /// </summary>
         [SerializeField] private T component;
-        
+
         /// <summary>
         /// 
         /// </summary>
-        [SerializeField] private bool inUse;
-        
+        [SerializeField] private bool used;
+
         /// <summary>
         /// 
         /// </summary>

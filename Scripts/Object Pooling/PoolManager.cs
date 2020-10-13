@@ -1,3 +1,4 @@
+﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -26,6 +27,23 @@ namespace SelfishCoder.Core
         {
             pools.Add(pool.Prefab,pool);    
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pool"></param>
+        public void RemovePool(Pool pool)
+        {
+            if (pools.ContainsValue(pool))
+            {
+                pools.Remove(pool.Prefab);
+            }
+        }
+
+        public Pool GetPool()
+        {
+            throw new NotImplementedException();
+        }
         
         /// <summary>
         /// 
@@ -50,13 +68,11 @@ namespace SelfishCoder.Core
         /// <returns></returns>
         public Pool CreatePool(GameObject basePrefab, int initialSize, int maxSize, bool isExtendable)
         {
-            GameObject poolObject = new GameObject($"{basePrefab.name} Pool");
-            poolObject.transform.parent = PoolManager.Instance.gameObject.transform;
-
-            Pool newPool = poolObject.AddComponent<Pool>();
-            
-            pools.Add(basePrefab,newPool);
-            return newPool;
+            Pool pool = new GameObject($"{basePrefab.name} Pool").AddComponent<Pool>();
+            GameObject parent = GameObject.Find("Pools");
+            Transform parentTransform = parent ? parent.transform : new GameObject("Pools").transform;
+            pool.transform.parent = parentTransform.transform;
+            return pool;
         }
 
         /// <summary>
@@ -71,7 +87,7 @@ namespace SelfishCoder.Core
                 PoolObject poolObject = new PoolObject
                 {
                     GameObject = Instantiate(pool.Prefab),
-                    InUse = false,
+                    Used = false,
                     Id = i
                 };
                 poolObject.GameObject.SetActive(false);
@@ -87,10 +103,7 @@ namespace SelfishCoder.Core
         /// <param name="pool"></param>
         public void DestroyPool(Pool pool)
         {
-            if (pools.ContainsValue(pool))
-            {
-                pools.Remove(pool.Prefab);
-            }
+            RemovePool(pool);
             Destroy(pool.gameObject);
         }
     }
